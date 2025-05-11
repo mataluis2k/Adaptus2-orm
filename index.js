@@ -4,39 +4,39 @@ const DatabaseManager = require('./src/core/DatabaseManager');
 const QueryBuilder = require('./src/core/QueryBuilder');
 const SchemaManager = require('./src/core/SchemaManager');
 
-// Static response object definition - no external dependency needed
-const response = {
-    statusCode: 200,
-    message: '',
-    error: '',
-    data: {},
-    source_action: '',
-    
-    setResponse(statusCode, message, error, data, source_action = '') {
-        this.statusCode = statusCode;
-        this.message = message;
-        this.error = error;
-        this.data = data;
-        this.source_action = source_action;
-        return this;
-    },
-    
+// Helper function to create response objects
+function createResponse(statusCode, message, error, data, source_action = '') {
+    return {
+        statusCode,
+        message,
+        error,
+        data,
+        source_action,
+        
+        toJSON() {
+            return {
+                statusCode: this.statusCode,
+                message: this.message,
+                error: this.error,
+                data: this.data,
+                source_action: this.source_action
+            };
+        }
+    };
+}
+
+// Response factory with static methods
+const responseFactory = {
     success(data, message = 'Success', source_action = '') {
-        return this.setResponse(200, message, '', data, source_action);
+        return createResponse(200, message, '', data, source_action);
     },
     
     error(message, error = '', source_action = '') {
-        return this.setResponse(500, message, error, {}, source_action);
+        return createResponse(500, message, error, {}, source_action);
     },
     
-    toJSON() {
-        return {
-            statusCode: this.statusCode,
-            message: this.message,
-            error: this.error,
-            data: this.data,
-            source_action: this.source_action
-        };
+    custom(statusCode, message, error, data, source_action = '') {
+        return createResponse(statusCode, message, error, data, source_action);
     }
 };
 
@@ -80,13 +80,13 @@ class ORM {
             const result = await adapter.create(connection, table, params);
             
             if (result.success) {
-                return response.success(result.data, 'Record created successfully');
+                return responseFactory.success(result.data, 'Record created successfully');
             }
             
-            return response.error('Failed to create record', result.error);
+            return responseFactory.error('Failed to create record', result.error);
         } catch (error) {
             console.error('Create error:', error);
-            return response.error('Error creating record', error);
+            return responseFactory.error('Error creating record', error);
         }
     }
 
@@ -98,13 +98,13 @@ class ORM {
             const result = await adapter.read(connection, table, params);
             
             if (result.success) {
-                return response.success(result.data, 'Records retrieved successfully');
+                return responseFactory.success(result.data, 'Records retrieved successfully');
             }
             
-            return response.error('Failed to read records', result.error);
+            return responseFactory.error('Failed to read records', result.error);
         } catch (error) {
             console.error('Read error:', error);
-            return response.error('Error reading records', error);
+            return responseFactory.error('Error reading records', error);
         }
     }
 
@@ -116,13 +116,13 @@ class ORM {
             const result = await adapter.update(connection, table, params);
             
             if (result.success) {
-                return response.success(result.data, 'Record updated successfully');
+                return responseFactory.success(result.data, 'Record updated successfully');
             }
             
-            return response.error('Failed to update record', result.error);
+            return responseFactory.error('Failed to update record', result.error);
         } catch (error) {
             console.error('Update error:', error);
-            return response.error('Error updating record', error);
+            return responseFactory.error('Error updating record', error);
         }
     }
 
@@ -134,13 +134,13 @@ class ORM {
             const result = await adapter.delete(connection, table, params);
             
             if (result.success) {
-                return response.success(result.data, 'Record deleted successfully');
+                return responseFactory.success(result.data, 'Record deleted successfully');
             }
             
-            return response.error('Failed to delete record', result.error);
+            return responseFactory.error('Failed to delete record', result.error);
         } catch (error) {
             console.error('Delete error:', error);
-            return response.error('Error deleting record', error);
+            return responseFactory.error('Error deleting record', error);
         }
     }
 
@@ -152,13 +152,13 @@ class ORM {
             const result = await adapter.exists(connection, table, params);
             
             if (result.success) {
-                return response.success(result.data, 'Existence check completed');
+                return responseFactory.success(result.data, 'Existence check completed');
             }
             
-            return response.error('Failed to check existence', result.error);
+            return responseFactory.error('Failed to check existence', result.error);
         } catch (error) {
             console.error('Exists error:', error);
-            return response.error('Error checking existence', error);
+            return responseFactory.error('Error checking existence', error);
         }
     }
 
@@ -168,13 +168,13 @@ class ORM {
             const result = await this.schemaManager.createTable(connection, config.type, table, schema);
             
             if (result.success) {
-                return response.success(null, 'Table created successfully');
+                return responseFactory.success(null, 'Table created successfully');
             }
             
-            return response.error('Failed to create table', result.error);
+            return responseFactory.error('Failed to create table', result.error);
         } catch (error) {
             console.error('Create table error:', error);
-            return response.error('Error creating table', error);
+            return responseFactory.error('Error creating table', error);
         }
     }
 
@@ -184,13 +184,13 @@ class ORM {
             const result = await this.schemaManager.tableExists(connection, config.type, table);
             
             if (result.success) {
-                return response.success(result.data, 'Table existence checked');
+                return responseFactory.success(result.data, 'Table existence checked');
             }
             
-            return response.error('Failed to check table existence', result.error);
+            return responseFactory.error('Failed to check table existence', result.error);
         } catch (error) {
             console.error('Table exists error:', error);
-            return response.error('Error checking table existence', error);
+            return responseFactory.error('Error checking table existence', error);
         }
     }
 
@@ -202,13 +202,13 @@ class ORM {
             const result = await adapter.query(connection, queryString, params);
             
             if (result.success) {
-                return response.success(result.data, 'Query executed successfully');
+                return responseFactory.success(result.data, 'Query executed successfully');
             }
             
-            return response.error('Failed to execute query', result.error);
+            return responseFactory.error('Failed to execute query', result.error);
         } catch (error) {
             console.error('Query error:', error);
-            return response.error('Error executing query', error);
+            return responseFactory.error('Error executing query', error);
         }
     }
 
@@ -222,16 +222,16 @@ class ORM {
                 const result = await adapter.initDatabase(connection, config);
                 
                 if (result.success) {
-                    return response.success(null, 'Database initialized successfully');
+                    return responseFactory.success(null, 'Database initialized successfully');
                 }
                 
-                return response.error('Failed to initialize database', result.error);
+                return responseFactory.error('Failed to initialize database', result.error);
             }
             
-            return response.success(null, 'Database connection established');
+            return responseFactory.success(null, 'Database connection established');
         } catch (error) {
             console.error('Init database error:', error);
-            return response.error('Error initializing database', error);
+            return responseFactory.error('Error initializing database', error);
         }
     }
 
@@ -256,10 +256,10 @@ class ORM {
                 }
             }
             
-            return response.success(results, 'MySQL pools closed');
+            return responseFactory.success(results, 'MySQL pools closed');
         } catch (error) {
             console.error('Close MySQL pools error:', error);
-            return response.error('Error closing MySQL pools', error);
+            return responseFactory.error('Error closing MySQL pools', error);
         }
     }
 
@@ -289,10 +289,10 @@ class ORM {
                 context.db.config = config;
             }
             
-            return response.success(context, 'Context extended successfully');
+            return responseFactory.success(context, 'Context extended successfully');
         } catch (error) {
             console.error('Extend context error:', error);
-            return response.error('Error extending context', error);
+            return responseFactory.error('Error extending context', error);
         }
     }
 
