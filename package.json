@@ -1,6 +1,6 @@
 {
   "name": "adaptus2-orm",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A multi-database ORM supporting MySQL, PostgreSQL, MongoDB, and Snowflake",
   "main": "index.js",
   "scripts": {
