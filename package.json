@@ -1,0 +1,89 @@
+{
+  "name": "adaptus2-orm",
+  "version": "1.0.0",
+  "description": "A multi-database ORM supporting MySQL, PostgreSQL, MongoDB, and Snowflake",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint src/**/*.js --fix",
+    "migrate": "node scripts/migrate.js",
+    "migrate:rollback": "node scripts/migrate.js rollback",
+    "migrate:reset": "node scripts/migrate.js reset",
+    "migrate:status": "node scripts/migrate.js status",
+    "migrate:create": "node scripts/migrate.js create",
+    "docs": "jsdoc src/**/*.js -d docs",
+    "example": "node examples/basic-usage.js"
+  },
+  "keywords": [
+    "orm",
+    "database",
+    "mysql",
+    "postgresql",
+    "mongodb",
+    "snowflake",
+    "nodejs",
+    "typescript",
+    "query-builder",
+    "migrations",
+    "connection-pooling"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "mongodb": "^5.0.0",
+    "mysql2": "^3.0.0",
+    "pg": "^8.11.0",
+    "snowflake-sdk": "^1.9.0",
+    "dotenv": "^16.3.0"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "eslint": "^8.40.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jest": "^27.2.1",
+    "jsdoc": "^4.0.2",
+    "@types/node": "^18.16.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/nodejs-multi-db-orm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/nodejs-multi-db-orm/issues"
+  },
+  "homepage": "https://github.com/yourusername/nodejs-multi-db-orm#readme",
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/**/*.test.js"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.js",
+      "**/?(*.)+(spec|test).js"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb-base",
+      "plugin:jest/recommended"
+    ],
+    "env": {
+      "node": true,
+      "jest": true
+    },
+    "rules": {
+      "no-console": ["warn", { "allow": ["warn", "error"] }],
+      "class-methods-use-this": "off",
+      "no-underscore-dangle": ["error", { "allowAfterThis": true }]
+    }
+  }
+}
