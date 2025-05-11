@@ -1,6 +1,6 @@
 {
   "name": "adaptus2-orm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A multi-database ORM supporting MySQL, PostgreSQL, MongoDB, and Snowflake",
   "main": "index.js",
   "scripts": {
@@ -53,12 +53,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/nodejs-multi-db-orm.git"
+    "url": "https://github.com/mataluis2k/Adaptus2-orm.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/nodejs-multi-db-orm/issues"
+    "url": "https://github.com/mataluis2k/Adaptus2-orm/issues"
   },
-  "homepage": "https://github.com/yourusername/nodejs-multi-db-orm#readme",
+  "homepage": "https://github.com/mataluis2k/Adaptus2-orm/blob/master/README.md",
   "jest": {
     "testEnvironment": "node",
     "coverageDirectory": "coverage",
