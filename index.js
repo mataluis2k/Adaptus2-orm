@@ -3,8 +3,42 @@ const path = require('path');
 const DatabaseManager = require('./src/core/DatabaseManager');
 const QueryBuilder = require('./src/core/QueryBuilder');
 const SchemaManager = require('./src/core/SchemaManager');
-const { getApiConfig } = require('./apiConfig');
-const response = require('./response');
+
+// Static response object definition - no external dependency needed
+const response = {
+    statusCode: 200,
+    message: '',
+    error: '',
+    data: {},
+    source_action: '',
+    
+    setResponse(statusCode, message, error, data, source_action = '') {
+        this.statusCode = statusCode;
+        this.message = message;
+        this.error = error;
+        this.data = data;
+        this.source_action = source_action;
+        return this;
+    },
+    
+    success(data, message = 'Success', source_action = '') {
+        return this.setResponse(200, message, '', data, source_action);
+    },
+    
+    error(message, error = '', source_action = '') {
+        return this.setResponse(500, message, error, {}, source_action);
+    },
+    
+    toJSON() {
+        return {
+            statusCode: this.statusCode,
+            message: this.message,
+            error: this.error,
+            data: this.data,
+            source_action: this.source_action
+        };
+    }
+};
 
 class ORM {
     constructor() {
